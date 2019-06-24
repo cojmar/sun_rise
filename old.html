@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+
+		<title>Sunrise Demo</title>
+
+		<style>
+			html, body {
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+
+	<body>
+		<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="600" height="600" viewBox="0 0 600 600">
+			<g transform="translate(-50, 125) scale(0.7)">
+				<line x1="100" x2="900" y1="250" y2="250" style="stroke: #c6c7c8; stroke-width: 1;"></line>
+				<path id="sun-orbit"  d="M200,250 a220,110 0 1,0  600,0 a220,110 0 1,0 -600,0" style="fill: none; stroke: rgba(198, 199, 200, 0.3); stroke-width: 2;"></path>
+				<path id="moon-orbit" d="M800,250 a220,110 0 1,1 -600,0  220,110 0 1,1  600,0" style="fill: none; stroke: none; stroke-width: 2;"></path>
+
+				<g id="sun">
+					<g transform="translate(-25, -25) scale(0.1)">
+						<polygon style="fill:#F2B851;" points="86.448,210.64 0,254.576 86.448,298.512"></polygon>
+						<polygon style="fill:#F2B851;" points="425.552,210.64 425.552,298.512 512,254.576"></polygon>
+						<polygon style="fill:#F2B851;" points="134.416,118.08 38.304,105.184 84.512,190.432"></polygon>
+						<polygon style="fill:#F2B851;" points="473.696,105.184 377.584,118.08 427.488,190.432"></polygon>
+						<polygon style="fill:#F2B851;" points="344.8,12.88 271.584,76.464 353.024,109.504"></polygon>
+						<polygon style="fill:#F2B851;" points="167.2,12.88 158.976,109.504 240.416,76.464"></polygon>
+						<polygon style="fill:#F2B851;" points="38.304,406.816 134.416,393.92 84.512,321.568"></polygon>
+						<polygon style="fill:#F2B851;" points="473.696,406.816 427.488,321.568 377.584,393.92"></polygon>
+						<polygon style="fill:#F2B851;" points="353.024,402.496 271.584,435.536 344.8,499.12"></polygon>
+						<polygon style="fill:#F2B851;" points="240.416,435.536 158.976,402.496 167.2,499.12"></polygon>
+						<circle style="fill:#F2B851;" cx="254.496" cy="256" r="146.496"></circle>
+					</g>
+				</g>
+
+				<g id="moon">
+					<g transform="translate(-25, -20) scale(2.2)">
+						<path d="M17.39 15.14A7.33 7.33 0 0 1 11.75 1.6c.23-.11.56-.23.79-.34a8.19 8.19 0 0 0-5.41.45 9 9 0 1 0 7 16.58 8.42 8.42 0 0 0 4.29-3.84 5.3 5.3 0 0 1-1.03.69z" style="fill: #fffbb9; stroke: rgba(198, 199, 200, 0.3); stroke-width: 1;"></path>
+					</g>
+				</g>
+
+				<animateMotion xlink:href="#sun" keyPoints="1;0" keyTimes="0;1" calcMode="linear" begin="0s" dur="60s" repeatCount="indefinite">
+					<mpath xlink:href="#sun-orbit"></mpath>
+				</animateMotion>
+
+				<animateMotion xlink:href="#moon" begin="0s" dur="60s" repeatCount="indefinite">
+					<mpath xlink:href="#moon-orbit"></mpath>
+				</animateMotion>
+			</g>
+		</svg>
+	</body>
+</html>
