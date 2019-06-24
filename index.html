@@ -148,7 +148,7 @@
 			var sun_cursor = Math.floor(obj.sun_position * (obj.points.length-1) /100);
 			var moon_cursor = Math.floor(obj.moon_position * (obj.points.length-1) /100);
 			if (obj.sun_cursor != sun_cursor){
-				if(Math.abs(obj.sun_cursor - sun_cursor) > 5) force = true;
+				if(Math.abs(obj.sun_cursor - sun_cursor) > 2) force = true;				
 				if (!force){
 					obj.sun_cursor+=1;
 					if (obj.sun_cursor >= obj.points.length) obj.sun_cursor = 0;					
