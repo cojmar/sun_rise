@@ -18,8 +18,10 @@
 	</style>
 </head>
 <body>
-	&nbsp;&nbsp;Start Second <input type="text" id="start_time"/>
-	&nbsp;&nbsp;Total Time (in seconds) <input type="text" id="total_time"/>
+	&nbsp;&nbsp;Start Time (second) <input type="text" id="start_time" style="width:50px;"/>
+	&nbsp;&nbsp;Total Time (in seconds) <input type="text" id="total_time" style="width:50px;"/>
+	&nbsp;&nbsp;Sun rise (second) <input type="text" id="sun_rise" style="width:50px;"/>
+	&nbsp;&nbsp;Sun set (second) <input type="text" id="sun_set" style="width:50px;"/>
 	<button onclick="sand_box_time()">Simulate</button><button onclick="live_time()">Show live</button>
 	<br>
 	<svg id="mysvg" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="600" height="600" viewBox="0 0 600 600">
@@ -150,17 +152,27 @@
 			obj.elements[el].setAttribute('transform', transformAttr);
 			return obj;
 		},		
-		set_sun:function(){						
-			obj.sun_position = obj.get_time_proc();
-			//console.log(obj.current_time);
-			//obj.sun_position +=25;
-			//obj.sun_position = -1;
+		set_sun:function(){								
+			obj.get_time_proc();
+			if(obj.current_time >= obj.sun_rise && obj.current_time <= obj.sun_set){
+				obj.sun_position = obj.get_time_proc();	
+			}
+			else{
+				
+				obj.sun_position = -1;
+			}
+			
 			while (obj.sun_position>100) obj.sun_position -=100;
 			return obj;
 		},
-		set_moon:function(){			
-			obj.moon_position = obj.get_time_proc();
-			//obj.moon_position +=175;
+		set_moon:function(){						
+			obj.get_time_proc();
+			if(obj.current_time >= obj.sun_rise && obj.current_time <= obj.sun_set){
+				obj.moon_position = -1;
+			}
+			else{
+				obj.moon_position = obj.get_time_proc();					
+			}
 			while (obj.moon_position>100) obj.moon_position -=100;
 			return obj;
 		},
@@ -178,8 +190,8 @@
 			obj.set_sun().set_moon().set_dom_time().set_background();
 			var sun_cursor =(obj.sun_position > 0)?Math.floor(obj.sun_position * (obj.points.length-1) /100):-1;
 			var moon_cursor =(obj.moon_position > 0)? Math.floor(obj.moon_position * (obj.points.length-1) /100):-1;
-			if (obj.sun_cursor != sun_cursor){
-				if(Math.abs(obj.sun_cursor - sun_cursor) > 4) force = true;	
+			if (obj.sun_cursor != sun_cursor){				
+				if(obj.sun_cursor >-1 &&  Math.abs(obj.sun_cursor - sun_cursor) > 4) force = true;	
 				
 				if (!force){
 					obj.sun_cursor+=1;
@@ -191,7 +203,7 @@
 				else obj.move_el("sun",{x:-1000,y:-1000});
 			}			
 			if (obj.moon_cursor != moon_cursor){
-				if(Math.abs(obj.moon_cursor - moon_cursor) > 4) force = true;				
+				if(obj.moon_cursor >-1 && Math.abs(obj.moon_cursor - moon_cursor) > 4) force = true;				
 				if (!force){
 					obj.moon_cursor+=1;
 					if (obj.moon_cursor >= obj.points.length) obj.moon_cursor = 0;					
@@ -219,7 +231,7 @@
 
 			if (sun_set){
 				obj.sun_set = sun_set
-			} else obj.sun_set = Math.round(total_time/2)
+			} else obj.sun_set = obj.total_time/2
 			
 			obj.get_time_proc();			
 			obj.init_points().render(1);
@@ -239,12 +251,16 @@ function live_time(){
 }
 
 function sand_box_time(){
-	var start_time = document.getElementById('start_time').value;
+	var start_time = document.getElementById('start_time').value;	
 	var total_time = document.getElementById('total_time').value;
-	svg_controller.init(start_time,total_time)
+	var sun_rise = document.getElementById('sun_rise').value;
+	var sun_set = document.getElementById('sun_set').value;	
+	svg_controller.init(start_time,total_time,sun_rise,sun_set)
 }
 document.getElementById('start_time').value = svg_controller.start_time;
 document.getElementById('total_time').value = svg_controller.total_time;
+document.getElementById('sun_rise').value = svg_controller.sun_rise;
+//document.getElementById('sun_set').value = svg_controller.sun_set;
 
 </script>
 </html>
