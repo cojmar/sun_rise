@@ -27,36 +27,56 @@
 			<style>
 				@import url('https://fonts.googleapis.com/css?family=Roboto:300&text=01234567890:');
 
-				#background {
+				.day #background {
 					filter: url(#blurlayer);
 					fill: url(#bgday);
 				}
 
-				.st15 {
-					fill: none;
-					stroke: rgba(0,0,0,0.6);
-					stroke-width: 1.7px;
+				.night #background {
+					filter: url(#blurlayer);
+					fill: url(#bgnight);
+				}
+
+				#path {
+					mask: url(#mask-container);
+				}
+
+				#gfx {
+					mask: url(#bottom);
 				}
 
 				.st2 {
 					fill: none;
-					stroke: rgba(0,0,0,0.6);
+					stroke: rgba(0, 0, 0, 0.6);
 					stroke-width: 2px;
 				}
 
 				.st4 {
 					fill: none;
-					stroke: rgba(0,0,0,0.6);
+					stroke: rgba(0, 0, 0, 0.6);
 					stroke-width: 4px;
 				}
 
-				.red {
-					fill: none;
-					stroke: red;
+				.night .st2 {
+					stroke: rgba(255, 255, 255, 0.8);
+				}
+
+				.night .st4 {
+					stroke: rgba(255, 255, 255, 0.8);
 				}
 
 				.none {
 					fill: none;
+					stroke: none;
+				}
+
+				.show {
+					fill: #fff;
+					stroke: none;
+				}
+
+				.hide {
+					fill: #000;
 					stroke: none;
 				}
 
@@ -65,12 +85,17 @@
 					font-weight: 300;
 					font-size: 56px;
 					pointer-events: none;
+					fill: #000;
+				}
+
+				.night text {
+					fill: #fff;
 				}
 			</style>
 
 			<defs>
 				<filter id="blurlayer" width="110%" height="110%">
-					<feGaussianBlur stdDeviation="4" result="blur"></feGaussianBlur>
+					<feGaussianBlur stdDeviation="0" result="blur"></feGaussianBlur>
 				</filter>
 				<pattern id="bgday" height="100%" width="100%" patternContentUnits="objectBoundingBox">
 					<image width="1" height="1" preserveAspectRatio="none" xlink:href="bg_day.png"></image>
@@ -79,34 +104,41 @@
 					<image width="1" height="1" preserveAspectRatio="none" xlink:href="bg_night.png"></image>
 				</pattern>
 				<mask id="mask-container">
-					<rect x="0" y="0" width="600" height="600" fill="#fff" stroke="red"></rect>
-					<circle id="mask" cx="0" cy="0" r="70" fill="black" stroke="red"></circle>
+					<rect class="show" x="0" y="0" width="600" height="600"></rect>
+					<circle id="mask" class="hide" cx="0" cy="0" r="70"></circle>
+				</mask>
+				<mask id="bottom">
+					<rect class="show" x="0" y="0" width="600" height="301"></rect>
 				</mask>
 			</defs>
 
-			<rect id="background" width="100%" height="100%"></rect>
-			<line class="st2" x1="25" x2="575" y1="300" y2="300"></line>
-			<path id="path" class="st2" transform="translate(0 5)" d="M505.74,294.59A220.56,220.56,0,0,0,100,282q-2.76,6-5.15,12.1" mask="url(#mask-container)"></path>
-			<text id="dom_time" class="text" x="200" y="280"></text>
-			<path id="orbit" class="none" d="M59.54,295.17a222.08,222.08,0,0,1,24.19-54.54,233.83,233.83,0,0,1,37-45.71,248.51,248.51,0,0,1,48.13-36.09,259.78,259.78,0,0,1,57.86-24.52,267.73,267.73,0,0,1,131.53-4,261.45,261.45,0,0,1,59.93,21.23,251.65,251.65,0,0,1,50.46,33.25,237.27,237.27,0,0,1,40,43.49,223.76,223.76,0,0,1,27.6,52.35q2.64,7.21,4.77,14.58"></path>
+			<g id="container" class="day">
+				<rect id="background" width="100%" height="100%"></rect>
+				<g id="gfx" transform="translate(0 80)">
+					<line class="st2" x1="25" x2="575" y1="300" y2="300"></line>
+					<path id="path" class="st2" transform="translate(0 5)" d="M505.74,294.59A220.56,220.56,0,0,0,100,282q-2.76,6-5.15,12.1"></path>
+					<text id="dom_time" class="text" x="200" y="280"></text>
+					<path id="orbit" class="none" d="M59.54,295.17a222.08,222.08,0,0,1,24.19-54.54,233.83,233.83,0,0,1,37-45.71,248.51,248.51,0,0,1,48.13-36.09,259.78,259.78,0,0,1,57.86-24.52,267.73,267.73,0,0,1,131.53-4,261.45,261.45,0,0,1,59.93,21.23,251.65,251.65,0,0,1,50.46,33.25,237.27,237.27,0,0,1,40,43.49,223.76,223.76,0,0,1,27.6,52.35q2.64,7.21,4.77,14.58"></path>
 
-			<g id="moon" transform="translate(-1000 ,-1000)">
-				<g class="st2" transform="translate(-35 -35) scale(0.65)">
-					<path d="M496.27,441.75c-6.1,15.89-6.36,30.77-1.74,45.64,4.76,15.34,13.79,27.25,27.15,36.65,13.07,9.2,27.28,12.76,42.67,12.39s28.79-7.17,41.67-16.83c-6.92,28.66-35.77,50.65-65,50.72-39.18.1-61.78-20.42-71.08-49.66C458.1,483.56,477,454.16,496.27,441.75Z" transform="translate(-465.74 -440.51)"></path>
-				</g>
-			</g>
+					<g id="moon" transform="translate(-1000 ,-1000)">
+						<g class="st2" transform="translate(-35 -35) scale(0.65)">
+							<path d="M496.27,441.75c-6.1,15.89-6.36,30.77-1.74,45.64,4.76,15.34,13.79,27.25,27.15,36.65,13.07,9.2,27.28,12.76,42.67,12.39s28.79-7.17,41.67-16.83c-6.92,28.66-35.77,50.65-65,50.72-39.18.1-61.78-20.42-71.08-49.66C458.1,483.56,477,454.16,496.27,441.75Z" transform="translate(-465.74 -440.51)"></path>
+						</g>
+					</g>
 
-			<g id="sun" transform="translate(-1000 ,-1000)">
-				<g class="st2" transform="translate(-60 -60) scale(0.5)">
-					<path class="st4" d="M511.81,579A66.53,66.53,0,0,1,445,512c0-37.5,29.82-67.1,67.43-66.94a67,67,0,0,1-.63,134Z" transform="translate(-395.23 -395.23)"></path>
-					<path d="M428.85,429.31l27.51,27.83,1.42-1.4L430.1,428.08Z" transform="translate(-395.23 -395.23)"></path>
-					<path d="M594.72,428.94l-27.55,27.68,1.29,1.31,27.61-27.68Z" transform="translate(-395.23 -395.23)"></path>
-					<path d="M456.7,566.89l-27.57,27.67c.44.45.89.9,1.33,1.36l27.63-27.66Z" transform="translate(-395.23 -395.23)"></path>
-					<path d="M567,567.28,594.6,594.9l1.27-1.25-27.64-27.71C567.81,566.39,567.4,566.84,567,567.28Z" transform="translate(-395.23 -395.23)"></path>
-					<ellipse cx="116.96" cy="214.76" rx="0.64" ry="27.95"></ellipse>
-					<ellipse cx="116.74" cy="19.27" rx="0.71" ry="27.24"></ellipse>
-					<path d="M433.76,512.54H395.24v-1h38.52Z" transform="translate(-395.23 -395.23)"></path>
-					<path d="M628.76,512.54H590.24c0-.33,0-.67,0-1h38.52C628.75,511.87,628.75,512.21,628.76,512.54Z" transform="translate(-395.23 -395.23)"></path>
+					<g id="sun" transform="translate(-1000 ,-1000)">
+						<g class="st2" transform="translate(-60 -60) scale(0.5)">
+							<path class="st4" d="M511.81,579A66.53,66.53,0,0,1,445,512c0-37.5,29.82-67.1,67.43-66.94a67,67,0,0,1-.63,134Z" transform="translate(-395.23 -395.23)"></path>
+							<path d="M428.85,429.31l27.51,27.83,1.42-1.4L430.1,428.08Z" transform="translate(-395.23 -395.23)"></path>
+							<path d="M594.72,428.94l-27.55,27.68,1.29,1.31,27.61-27.68Z" transform="translate(-395.23 -395.23)"></path>
+							<path d="M456.7,566.89l-27.57,27.67c.44.45.89.9,1.33,1.36l27.63-27.66Z" transform="translate(-395.23 -395.23)"></path>
+							<path d="M567,567.28,594.6,594.9l1.27-1.25-27.64-27.71C567.81,566.39,567.4,566.84,567,567.28Z" transform="translate(-395.23 -395.23)"></path>
+							<ellipse cx="116.96" cy="214.76" rx="0.64" ry="27.95"></ellipse>
+							<ellipse cx="116.74" cy="19.27" rx="0.71" ry="27.24"></ellipse>
+							<path d="M433.76,512.54H395.24v-1h38.52Z" transform="translate(-395.23 -395.23)"></path>
+							<path d="M628.76,512.54H590.24c0-.33,0-.67,0-1h38.52C628.75,511.87,628.75,512.21,628.76,512.54Z" transform="translate(-395.23 -395.23)"></path>
+						</g>
+					</g>
 				</g>
 			</g>
 		</svg>
@@ -130,7 +162,7 @@
 						sun: document.getElementById('sun'),
 						moon: document.getElementById('moon'),
 						dom_time: document.getElementById('dom_time'),
-						bg: document.getElementById('my_bg')
+						bg: document.getElementById('container')
 					},
 					point_density: 0.3,
 					startTime: null,
@@ -215,12 +247,14 @@
 
 						return obj;
 					},
-					set_background: function() {
+					set_background: function(bg) {
+						obj.elements['bg'].className.baseVal = bg;
+
 						return this;
 					},
 					render: function(force) {
 						force = !!(force);
-						obj.set_sun().set_moon().set_dom_time().set_background();
+						obj.set_sun().set_moon().set_dom_time();
 
 						var sun_cursor = obj.sun_position > 0 ? Math.floor(obj.sun_position * (obj.points.length - 1) / 100) : -1;
 						var moon_cursor = obj.moon_position > 0 ? Math.floor(obj.moon_position * (obj.points.length - 1) / 100) : -1;
@@ -241,6 +275,7 @@
 							}
 
 							if (obj.sun_cursor >= 0) {
+								obj.set_background('day');
 								obj.move_el('sun', obj.points[obj.sun_cursor]);
 								obj.move_el('mask', obj.points[obj.sun_cursor]);
 							} else {
@@ -249,7 +284,9 @@
 						}
 
 						if (obj.moon_cursor !== moon_cursor) {
-							if (obj.moon_cursor > -1 && Math.abs(obj.moon_cursor - moon_cursor) > 4) force = true;
+							if (obj.moon_cursor > -1 && Math.abs(obj.moon_cursor - moon_cursor) > 4) {
+								force = true;
+							}
 
 							if (!force) {
 								obj.moon_cursor += 1;
@@ -262,6 +299,7 @@
 							}
 
 							if (obj.moon_cursor >= 0) {
+								obj.set_background('night');
 								obj.move_el('moon', obj.points[obj.moon_cursor]);
 								obj.move_el('mask', obj.points[obj.moon_cursor]);
 							} else {
