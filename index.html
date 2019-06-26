@@ -111,10 +111,10 @@
 		},		
 		point_density:0.3,
 		start_time:0,
-		total_time:60,
+		total_time:24,
 		current_time:0,
-		sun_rise:0,
-		sun_set:0,
+		sun_rise:7,
+		sun_set:19,
 		sun_cursor:0,
 		moon_cursor:0,
 		sun_position:0,
@@ -155,10 +155,11 @@
 		set_sun:function(){								
 			obj.get_time_proc();
 			if(obj.current_time >= obj.sun_rise && obj.current_time <= obj.sun_set){
-				obj.sun_position = obj.get_time_proc();	
+				var sun_length = obj.sun_set - obj.sun_rise
+				var sun_pos  = obj.current_time - obj.sun_rise				
+				obj.sun_position = sun_pos * 100/sun_length
 			}
-			else{
-				
+			else{				
 				obj.sun_position = -1;
 			}
 			
@@ -171,7 +172,13 @@
 				obj.moon_position = -1;
 			}
 			else{
-				obj.moon_position = obj.get_time_proc();					
+
+				var moon_length = obj.sun_rise + obj.total_time - obj.sun_set
+				var sun_pos  = obj.current_time - obj.sun_set
+				console.log(moon_length+'/'+sun_pos)
+				obj.moon_position = sun_pos * 100/moon_length
+
+									
 			}
 			while (obj.moon_position>100) obj.moon_position -=100;
 			return obj;
@@ -227,11 +234,11 @@
 			}
 			if (sun_rise || sun_rise ===0){
 				obj.sun_rise = sun_rise
-			} else obj.sun_rise = 0;
+			}else if (!obj.sun_rise)  obj.sun_rise = 0;
 
 			if (sun_set){
 				obj.sun_set = sun_set
-			} else obj.sun_set = obj.total_time/2
+			} else if (!obj.sun_set) obj.sun_set = obj.total_time/2
 			
 			obj.get_time_proc();			
 			obj.init_points().render(1);
@@ -260,7 +267,7 @@ function sand_box_time(){
 document.getElementById('start_time').value = svg_controller.start_time;
 document.getElementById('total_time').value = svg_controller.total_time;
 document.getElementById('sun_rise').value = svg_controller.sun_rise;
-//document.getElementById('sun_set').value = svg_controller.sun_set;
+document.getElementById('sun_set').value = svg_controller.sun_set;
 
 </script>
 </html>
