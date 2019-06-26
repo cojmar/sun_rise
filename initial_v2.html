@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+		<title>Sunrise Demo</title>
+		<style>
+			html,
+			body {
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		<svg id="mysvg" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="600" height="600" viewBox="0 0 600 600">
+			<style>
+				#background {
+					filter: url(#blurlayer);
+					fill: url(#bgday);
+				}
+
+				.st2 {
+					fill: none;
+					stroke: rgba(0,0,0,0.3);
+					stroke-width: 2px;
+				}
+
+				.st4 {
+					fill: none;
+					stroke: rgba(0,0,0,0.3);
+					stroke-width: 4px;
+				}
+			</style>
+
+			<defs>
+				<filter id="blurlayer" width="110%" height="110%">
+					<feGaussianBlur stdDeviation="4" result="blur"></feGaussianBlur>
+				</filter>
+				<pattern id="bgday" height="100%" width="100%" patternContentUnits="objectBoundingBox">
+					<image width="1" height="1" preserveAspectRatio="none" xlink:href="bg_day.png"></image>
+				</pattern>
+				<pattern id="bgnight" height="100%" width="100%" patternContentUnits="objectBoundingBox">
+					<image width="1" height="1" preserveAspectRatio="none" xlink:href="bg_night.png"></image>
+				</pattern>
+			</defs>
+
+			<rect id="background" width="100%" height="100%"></rect>
+			<g id="lines" transform="translate(43 154)">
+				<circle class="st2" cx="257" cy="220" r="220"></circle>
+				<line class="st2" x1="15" y1="140" x2="500" y2="140"></line>
+			</g>
+
+			<g class="st2">
+				<path id="orbit" d="M505.74,294.59A220.56,220.56,0,0,0,100,282q-2.76,6-5.15,12.1" style="fill: none; stroke: red;"></path>
+
+				<g id="moon" class="st4" transform="translate(-35 -35) scale(0.5)">
+					<path d="M496.27,441.75c-6.1,15.89-6.36,30.77-1.74,45.64,4.76,15.34,13.79,27.25,27.15,36.65,13.07,9.2,27.28,12.76,42.67,12.39s28.79-7.17,41.67-16.83c-6.92,28.66-35.77,50.65-65,50.72-39.18.1-61.78-20.42-71.08-49.66C458.1,483.56,477,454.16,496.27,441.75Z" transform="translate(-465.74 -440.51)"></path>
+				</g>
+
+				<g id="sun" class="st2" transform="translate(-60 -60) scale(0.5)">
+					<path class="st4" d="M511.81,579A66.53,66.53,0,0,1,445,512c0-37.5,29.82-67.1,67.43-66.94a67,67,0,0,1-.63,134Z" transform="translate(-395.23 -395.23)"></path>
+					<path d="M428.85,429.31l27.51,27.83,1.42-1.4L430.1,428.08Z" transform="translate(-395.23 -395.23)"></path>
+					<path d="M594.72,428.94l-27.55,27.68,1.29,1.31,27.61-27.68Z" transform="translate(-395.23 -395.23)"></path>
+					<path d="M456.7,566.89l-27.57,27.67c.44.45.89.9,1.33,1.36l27.63-27.66Z" transform="translate(-395.23 -395.23)"></path>
+					<path d="M567,567.28,594.6,594.9l1.27-1.25-27.64-27.71C567.81,566.39,567.4,566.84,567,567.28Z" transform="translate(-395.23 -395.23)"></path>
+					<path d="M433.76,512.54H395.24v-1h38.52Z" transform="translate(-395.23 -395.23)"></path>
+					<path d="M628.76,512.54H590.24c0-.33,0-.67,0-1h38.52C628.75,511.87,628.75,512.21,628.76,512.54Z" transform="translate(-395.23 -395.23)"></path>
+				</g>
+
+				<animateMotion xlink:href="#moon" keyPoints="1;0" keyTimes="0;1" calcMode="linear" begin="0s" dur="10s" repeatCount="indefinite">
+					<mpath xlink:href="#orbit"></mpath>
+				</animateMotion>
+
+				<animateMotion xlink:href="#sun" keyPoints="1;0" keyTimes="0;1" calcMode="linear" begin="0s" dur="10s" repeatCount="indefinite">
+					<mpath xlink:href="#orbit"></mpath>
+				</animateMotion>
+			</g>
+
+		</svg>
+
+		<!--<script>
+			(function (root, factory) {
+				'use strict';
+				if (typeof define === 'function' && define.amd) {
+					define(factory);
+				} else if (typeof exports !== 'undefined') {
+					module.exports = factory();
+				} else {
+					root.svg_controller = factory();
+				}
+			}(this, function () {
+				var obj = {
+					elements: {
+						svg: document.getElementById('mysvg'),
+						path: document.getElementById('sun-orbit'),
+						sun: document.getElementById('sun'),
+						moon: document.getElementById('moon'),
+						dom_time: document.getElementById('dom_time'),
+						bg: document.getElementById('my_bg'),
+					},
+					gradient: ["#000000", "#000108", "#010210", "#020318", "#020420", "#030628", "#040730", "#050839", "#050941", "#060B49", "#070C51", "#070D59", "#080E61", "#09106A", "#0A1172", "#0A127A", "#0B1382", "#0C158A", "#0C1692", "#0D179B", "#0E18A3", "#0F1AAB", "#0F1BB3", "#101CBB", "#111DC3", "#121FCC", "#1B27CE", "#2430D0", "#2E39D2", "#3742D4", "#414BD6", "#4A54D8", "#545DDA", "#5D66DC", "#676FDE", "#7078E0", "#7A81E2", "#838AE4", "#8D93E6", "#969CE8", "#A0A5EA", "#A9AEEC", "#B3B7EE", "#BCC0F0", "#C6C9F2", "#CFD2F4", "#D9DBF6", "#E2E4F8", "#ECEDFA", "#F5F6FC", "#FFFFFF", "#FAFBFD", "#F6F7FB", "#F2F3F9", "#EEEFF7", "#EAEBF5", "#E6E7F3", "#E2E3F2", "#DEDFF0", "#D9DBEE", "#D5D7EC", "#D1D3EA", "#CDCFE8", "#C9CCE7", "#C5C8E5", "#C1C4E3", "#BDC0E1", "#B8BCDF", "#B4B8DD", "#B0B4DC", "#ACB0DA", "#A8ACD8", "#A4A8D6", "#A0A4D4", "#9CA0D2", "#989DD1", "#9196C8", "#8B90C0", "#858AB7", "#7F83AF", "#797DA7", "#73779E", "#6D7196", "#676A8E", "#616485", "#5B5E7D", "#555775", "#4F516C", "#484B64", "#42455B", "#3C3E53", "#36384B", "#303242", "#2A2B3A", "#242532", "#1E1F29", "#181921", "#121219", "#0C0C10", "#060608", "#000000"],
+					start_time: 0,
+					total_time: 60,
+					current_time: 0,
+					sun_cursor: 0,
+					moon_cursor: 0,
+					sun_position: 0,
+					moon_position: 0,
+					points: [],
+					get_time_proc: function () {
+						if (!obj.startTime) {
+							obj.startTime = new Date();
+							obj.startTime.setSeconds(obj.startTime.getSeconds() - obj.start_time);
+							obj.startTime = new Date(obj.startTime);
+						}
+						endTime = new Date();
+						obj.current_time = endTime - obj.startTime;
+						obj.current_time /= 1000;
+						if (obj.current_time > obj.total_time) {
+							obj.current_time = 0;
+							obj.startTime = new Date();
+						}
+						return obj.current_time * 100 / obj.total_time
+					},
+					init_points: function () {
+						obj.points = []
+						for (var i = 0; i <= Math.floor(obj.elements.path.getTotalLength()); i += 1) {
+							var pt = obj.elements.path.getPointAtLength(i);
+							obj.points.push(pt);
+						}
+						return obj;
+					},
+					move_el: function (el, point) {
+						var my_point = {
+							x: point.x,
+							y: point.y
+						};
+						if (el === "sun") {
+							my_point.x -= 225;
+							my_point.y -= 225;
+						}
+						var transformAttr = ' translate(' + my_point.x + ',' + my_point.y + ')';
+						obj.elements[el].setAttribute('transform', transformAttr);
+						return obj;
+					},
+					set_sun: function () {
+						obj.sun_position = obj.get_time_proc();
+						obj.sun_position += 25;
+						while (obj.sun_position > 100) obj.sun_position -= 100;
+						return obj;
+					},
+					set_moon: function () {
+						obj.moon_position = obj.get_time_proc();
+						obj.moon_position += 175;
+						while (obj.moon_position > 100) obj.moon_position -= 100;
+						return obj;
+					},
+					set_dom_time: function () {
+						var display_time = Math.round(obj.get_time_proc() * 86400 / 100);
+						obj.elements.dom_time.textContent = new Date(display_time * 1000).toISOString().substr(11, 8);
+						return obj;
+					},
+					set_gradient: function () {
+						var color = Math.round(obj.get_time_proc());
+						color = obj.gradient[color];
+						obj.elements.bg.setAttribute("fill", color);
+						return this;
+					},
+					render: function (force) {
+						force = (force) ? true : false;
+						obj.set_sun().set_moon().set_dom_time().set_gradient();
+						var sun_cursor = Math.floor(obj.sun_position * (obj.points.length - 1) / 100);
+						var moon_cursor = Math.floor(obj.moon_position * (obj.points.length - 1) / 100);
+						if (obj.sun_cursor != sun_cursor) {
+							if (Math.abs(obj.sun_cursor - sun_cursor) > 2) force = true;
+							if (!force) {
+								obj.sun_cursor += 1;
+								if (obj.sun_cursor >= obj.points.length) obj.sun_cursor = 0;
+							} else {
+								obj.sun_cursor = sun_cursor
+							}
+							obj.move_el("sun", obj.points[obj.sun_cursor]);
+						}
+						if (obj.moon_cursor != moon_cursor) {
+							if (!force) {
+								obj.moon_cursor += 1;
+								if (obj.moon_cursor >= obj.points.length) obj.moon_cursor = 0;
+							} else {
+								obj.moon_cursor = moon_cursor
+							}
+							obj.move_el("moon", obj.points[obj.moon_cursor]);
+						}
+						return obj;
+					},
+					init(start_time, total_time) {
+						if (obj.timer) clearInterval(obj.timer);
+						if (start_time || start_time === 0) {
+							if (obj.startTime) delete obj.startTime;
+							obj.start_time = start_time;
+						}
+						if (total_time) {
+							obj.total_time = total_time;
+						}
+						obj.get_time_proc();
+						obj.init_points().render(1);
+						obj.timer = setInterval(function () {
+							obj.render();
+						}, 1);
+						return obj;
+					}
+				};
+				return obj.init();
+			}));
+
+			function live_time() {
+				var dt = new Date();
+				var secs = dt.getSeconds() + (60 * (dt.getMinutes() + (60 * dt.getHours())));
+				svg_controller.init(secs, 86400)
+			}
+
+			function sand_box_time() {
+				var start_time = document.getElementById('start_time').value;
+				var total_time = document.getElementById('total_time').value;
+				svg_controller.init(start_time, total_time)
+			}
+
+			document.getElementById('start_time').value = svg_controller.start_time;
+			document.getElementById('total_time').value = svg_controller.total_time;
+		</script>-->
+	</body>
+</html>
