@@ -171,15 +171,12 @@
 			if(obj.current_time >= obj.sun_rise && obj.current_time <= obj.sun_set){
 				obj.moon_position = -1;
 			}
-			else{
-
-				var moon_length = obj.sun_rise + obj.total_time - obj.sun_set
-				var sun_pos  = obj.current_time - obj.sun_set
-				console.log(moon_length+'/'+sun_pos)
-				obj.moon_position = sun_pos * 100/moon_length
-
-									
+			else{				
+				var moon_length = obj.total_time - obj.sun_set + obj.sun_rise
+				var moon_pos  =(obj.current_time > obj.sun_set)?obj.current_time - obj.sun_set:obj.current_time+(obj.total_time - obj.sun_set)				
+				obj.moon_position = moon_pos * 100/moon_length									
 			}
+			
 			while (obj.moon_position>100) obj.moon_position -=100;
 			return obj;
 		},
@@ -227,17 +224,17 @@
 			if (obj.timer) clearInterval(obj.timer);
 			if (start_time || start_time ===0){
 				if (obj.startTime) delete obj.startTime;
-				obj.start_time = start_time;
+				obj.start_time = parseFloat(start_time);
 			}
 			if (total_time){				
-				obj.total_time = total_time;
+				obj.total_time = parseFloat(total_time);
 			}
 			if (sun_rise || sun_rise ===0){
-				obj.sun_rise = sun_rise
+				obj.sun_rise = parseFloat(sun_rise)
 			}else if (!obj.sun_rise)  obj.sun_rise = 0;
 
 			if (sun_set){
-				obj.sun_set = sun_set
+				obj.sun_set = parseFloat(sun_set)
 			} else if (!obj.sun_set) obj.sun_set = obj.total_time/2
 			
 			obj.get_time_proc();			
@@ -254,7 +251,7 @@
 function live_time(){
 	var dt = new Date();
 	var secs = dt.getSeconds() + (60 * (dt.getMinutes() + (60 * dt.getHours())));
-	svg_controller.init(secs,86400)
+	svg_controller.init(secs,86400,25200,68400)
 }
 
 function sand_box_time(){
