@@ -122,8 +122,7 @@
 			return obj;
 		},		
 		set_sun:function(){						
-			obj.sun_position = obj.get_time_proc();
-			console.log(obj.current_time);
+			obj.sun_position = obj.get_time_proc();			
 			obj.sun_position +=25;			
 			while (obj.sun_position>100) obj.sun_position -=100;
 			return obj;
