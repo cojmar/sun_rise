@@ -157,7 +157,7 @@
 				}else{
 					obj.sun_cursor = sun_cursor
 				}	
-				if (obj.sun_cursor > 0)	obj.move_el("sun",obj.points[obj.sun_cursor]);
+				if (obj.sun_cursor >= 0)	obj.move_el("sun",obj.points[obj.sun_cursor]);
 				else obj.move_el("sun",{x:-100,y:-100});
 			}			
 			if (obj.moon_cursor != moon_cursor){
@@ -168,7 +168,7 @@
 				}else{
 					obj.moon_cursor = moon_cursor
 				}				
-				if (obj.moon_cursor > 0) obj.move_el("moon",obj.points[obj.moon_cursor]);
+				if (obj.moon_cursor >= 0) obj.move_el("moon",obj.points[obj.moon_cursor]);
 				else obj.move_el("moon",{x:-100,y:-100});
 			}	
 			return obj;			
