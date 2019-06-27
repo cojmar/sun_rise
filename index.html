@@ -365,7 +365,7 @@
 								obj.init(start_time, total_time, sun_rise, sun_set)								
 							}
 							else{
-								//maybe use init_from_local_time as fall back: ;
+								obj.init_from_local_time();//fall back
 							}
 						};
 						xhttp.open("GET", url, true);
