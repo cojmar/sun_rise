@@ -25,7 +25,7 @@
 		&nbsp;&nbsp;External url <input type="text" value ="my_time.json" id="external_url" style="width:150px;"/>
 		<button onclick="url_time()">Load from url</button><br>
 		<br>
-		<svg id="mysvg" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="600" height="600" viewBox="0 0 600 600">
+		<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="600" height="600" viewBox="0 0 600 600">
 			<style>
 				@import url('https://fonts.googleapis.com/css?family=Roboto:300&text=01234567890:');
 
@@ -90,6 +90,10 @@
 					fill: #000;
 				}
 
+				.text_small{
+					font-size: 20px;
+				}
+
 				.night text {
 					fill: #fff;
 				}
@@ -120,6 +124,7 @@
 					<line class="st2" x1="25" x2="575" y1="300" y2="300"></line>
 					<path id="path" class="st2" transform="translate(0 5)" d="M505.74,294.59A220.56,220.56,0,0,0,100,282q-2.76,6-5.15,12.1"></path>
 					<text id="dom_time" class="text" x="200" y="280"></text>
+					
 					<path id="orbit" class="none" d="M59.54,295.17a222.08,222.08,0,0,1,24.19-54.54,233.83,233.83,0,0,1,37-45.71,248.51,248.51,0,0,1,48.13-36.09,259.78,259.78,0,0,1,57.86-24.52,267.73,267.73,0,0,1,131.53-4,261.45,261.45,0,0,1,59.93,21.23,251.65,251.65,0,0,1,50.46,33.25,237.27,237.27,0,0,1,40,43.49,223.76,223.76,0,0,1,27.6,52.35q2.64,7.21,4.77,14.58"></path>
 
 					<g id="moon" transform="translate(-1000 ,-1000)">
@@ -142,6 +147,8 @@
 						</g>
 					</g>
 				</g>
+				<text id="left_label" class="text text_small" x="24" y="400"></text>
+					<text id="right_label" class="text text_small" x="492" y="400"></text>
 			</g>
 		</svg>
 
@@ -157,14 +164,16 @@
 				}
 			}(this, function() {
 				var obj = {
-					elements: {// DOM elements
-						svg: document.getElementById('mysvg'),
+					elements: {// DOM elements						
 						path: document.getElementById('orbit'),
 						mask: document.getElementById('mask'),
 						sun: document.getElementById('sun'),
 						moon: document.getElementById('moon'),
 						dom_time: document.getElementById('dom_time'),
-						bg: document.getElementById('container')
+						bg: document.getElementById('container'),
+						left_label:document.getElementById('left_label'),
+						right_label:document.getElementById('right_label'),
+						
 					},
 					use_pm:true,//true - shows times in AM/PM format
 					use_seconds:false,//true - show seconds times
@@ -238,6 +247,11 @@
 						while (obj.moon_position>100) obj.moon_position -=100;
 						return obj;
 					},				
+					set_dom_labels:function(){
+						obj.elements.left_label.textContent = obj.make_time_from_seconds(obj.sun_rise);
+						obj.elements.right_label.textContent = obj.make_time_from_seconds(obj.sun_set);
+						return obj;			
+					},
 					set_dom_time: function() {
 						var display_time = obj.make_time_from_seconds(Math.round(obj.get_time_proc() * 86400 / 100));
 						obj.elements.dom_time.textContent = display_time;
@@ -318,21 +332,21 @@
 						// supports strings of formats: HH,HH:MM,HH:MM:SS
 						var s = 0;
 						var tmp = 0;
-						var my_time = hh_ii_ss.split(':');
+						var my_time = hh_ii_ss.split(':').map((num) => parseInt(num));						
 						if (my_time[0]){
-							tmp = parseInt(my_time[0])  * 60 *60;
+							tmp = my_time[0]  * 60 *60;							
 							s+=tmp;
-							//console.log('seconds from hours: '+tmp);
+							console.log('seconds from hours: '+tmp);
 						}
 						if (my_time[1]){
 							tmp = parseInt(my_time[0])  * 60;
 							s+=tmp;							
-							//console.log('seconds from minutes: '+tmp);
+							console.log('seconds from minutes: '+tmp);
 						}
 						if (my_time[2]){
 							tmp = parseInt(my_time[0]);
 							s+=tmp;
-							//console.log('seconds from seconds: '+tmp);
+							console.log('seconds from seconds: '+tmp);
 						}												
 						return s;
 					},
@@ -359,6 +373,7 @@
 						}
 						obj.get_time_proc();
 						obj.init_points().render(1);
+						obj.set_dom_labels();
 						obj.timer = setInterval(function() {
 							obj.render();
 						}, 1);
@@ -381,7 +396,7 @@
 								var sun_set = (url_data.sun_set)?obj.make_seconds_from_time(url_data.sun_set):null;
 								var start_time = (url_data.current_time)?obj.make_seconds_from_time(url_data.current_time):null;
 								var total_time = obj.make_seconds_from_time("24");
-								obj.init(start_time, total_time, sun_rise, sun_set);							
+								obj.init(start_time, total_time, sun_rise, sun_set);																
 							}
 							else{
 								//obj.init_from_local_time();//posible fall back
