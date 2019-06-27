@@ -248,8 +248,14 @@
 						return obj;
 					},				
 					set_dom_labels:function(){
-						obj.elements.left_label.textContent = obj.make_time_from_seconds(obj.sun_rise);
-						obj.elements.right_label.textContent = obj.make_time_from_seconds(obj.sun_set);
+						var sun_rise_proc = obj.sun_rise * 100 / obj.total_time;
+						var sun_set_proc = obj.sun_set * 100 / obj.total_time;						
+						obj.elements.left_label.textContent = obj.make_time_from_seconds(Math.round(sun_rise_proc * 86400 / 100));
+						obj.elements.right_label.textContent = obj.make_time_from_seconds(Math.round(sun_set_proc * 86400 / 100));
+						/*
+							obj.elements.left_label.textContent = obj.make_time_from_seconds(obj.sun_rise);
+							obj.elements.right_label.textContent = obj.make_time_from_seconds(obj.sun_set);
+						*/
 						return obj;			
 					},
 					set_dom_time: function() {
@@ -330,23 +336,24 @@
 					},					
 					make_seconds_from_time:function(hh_ii_ss){
 						// supports strings of formats: HH,HH:MM,HH:MM:SS
+						//console.log(hh_ii_ss)
 						var s = 0;
 						var tmp = 0;
 						var my_time = hh_ii_ss.split(':').map((num) => parseInt(num));						
 						if (my_time[0]){
 							tmp = my_time[0]  * 60 *60;							
 							s+=tmp;
-							console.log('seconds from hours: '+tmp);
+							//console.log('seconds from hours: '+tmp);
 						}
 						if (my_time[1]){
-							tmp = parseInt(my_time[0])  * 60;
+							tmp = parseInt(my_time[1])  * 60;
 							s+=tmp;							
-							console.log('seconds from minutes: '+tmp);
+							//console.log('seconds from minutes: '+tmp);
 						}
 						if (my_time[2]){
-							tmp = parseInt(my_time[0]);
+							tmp = parseInt(my_time[2]);
 							s+=tmp;
-							console.log('seconds from seconds: '+tmp);
+							//console.log('seconds from seconds: '+tmp);
 						}												
 						return s;
 					},
@@ -396,6 +403,7 @@
 								var sun_set = (url_data.sun_set)?obj.make_seconds_from_time(url_data.sun_set):null;
 								var start_time = (url_data.current_time)?obj.make_seconds_from_time(url_data.current_time):null;
 								var total_time = obj.make_seconds_from_time("24");
+								
 								obj.init(start_time, total_time, sun_rise, sun_set);																
 							}
 							else{
@@ -406,7 +414,9 @@
 						xhttp.send();
 					}
 				};
-				return obj.init();
+				obj.init();
+				obj.init_from_url('my_time.json');
+				return obj;
 			}));
 
 			function live_time() {				
