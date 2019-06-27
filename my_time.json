@@ -1,5 +1,6 @@
-{
-    "sun_rise":"00:00:00",
-    "sun_set":"19:00:00",
-    "current_time":"6:00:00"
+{    
+    "sun_rise":"06:00:00",
+    "sun_set":"20:00:00",
+    "current_time":"6:00:00",
+    "label":"mid text here"    
 }
