@@ -1,4 +1,4 @@
-			<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="600" height="600" viewBox="0 0 600 600">
+		<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="600" height="600" viewBox="0 0 600 600">
 			<style>
 				@import url('https://fonts.googleapis.com/css?family=Roboto:300&amp;text=01234567890:');
 
@@ -89,15 +89,21 @@
 				<mask id="bottom">
 					<rect class="show" x="0" y="0" width="600" height="301"></rect>
 				</mask>
+				<radialGradient id="sungradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+					<stop offset="0%" style="stop-color: #fff079; stop-opacity: 1;"></stop>
+					<stop offset="60%" style="stop-color: #fff079; stop-opacity: 1;"></stop>
+					<stop offset="100%" style="stop-color: #fff079; stop-opacity: 0;"></stop>
+				</radialGradient>
 			</defs>
 
 			<g id="container" class="day">
 				<rect id="background" width="100%" height="100%"></rect>
+				<circle id="light" cx="0" cy="0" r="0" fill="url(#sungradient)"></circle>
 				<g id="gfx" transform="translate(0 80)">
 					<line class="st2" x1="25" x2="575" y1="300" y2="300"></line>
 					<path id="path" class="st2" transform="translate(0 5)" d="M505.74,294.59A220.56,220.56,0,0,0,100,282q-2.76,6-5.15,12.1"></path>
 					<text id="dom_time" class="text" x="182" y="280"></text>
-					
+
 					<path id="orbit" class="none" d="M59.54,295.17a222.08,222.08,0,0,1,24.19-54.54,233.83,233.83,0,0,1,37-45.71,248.51,248.51,0,0,1,48.13-36.09,259.78,259.78,0,0,1,57.86-24.52,267.73,267.73,0,0,1,131.53-4,261.45,261.45,0,0,1,59.93,21.23,251.65,251.65,0,0,1,50.46,33.25,237.27,237.27,0,0,1,40,43.49,223.76,223.76,0,0,1,27.6,52.35q2.64,7.21,4.77,14.58"></path>
 
 					<g id="moon" transform="translate(-1000 ,-1000)">
@@ -122,9 +128,9 @@
 				</g>
 				<text id="left_label" class="text text_small" x="24" y="400"></text>
 					<text id="right_label" class="text text_small" x="492" y="400"></text>
-			</g>		
+			</g>
             <script type="text/javascript"><![CDATA[
-            	(function(root, factory) {
+           			(function(root, factory) {
 				'use strict';
 				if (typeof define === 'function' && define.amd) {
 					define(factory);
@@ -135,7 +141,7 @@
 				}
 			}(this, function() {
 				var obj = {
-					elements: {// DOM elements						
+					elements: {// DOM elements
 						path: document.getElementById('orbit'),
 						mask: document.getElementById('mask'),
 						sun: document.getElementById('sun'),
@@ -144,12 +150,13 @@
 						bg: document.getElementById('container'),
 						left_label:document.getElementById('left_label'),
 						right_label:document.getElementById('right_label'),
-						
+						light:document.getElementById('light'),
+
 					},
 					use_pm:true,//true - shows times in AM/PM format
 					use_seconds:false,//true - show seconds times
-					point_density: 0.3,// Distance between 2 points on motion path										
-					start_time: 0, 	// Start time (second where to stat current time)					
+					point_density: 0.3,// Distance between 2 points on motion path
+					start_time: 0, 	// Start time (second where to stat current time)
 					total_time: 24,	// Total time in seconds
 					sun_rise: 7,	// Sun rise (second when sun rises)
 					sun_set: 19, 	// Sun set (second when sun sets)
@@ -159,8 +166,8 @@
 					sun_position: 0,
 					moon_position: 0,
 					current_time: 0,
-					startTime: null,									
-					points: [],					
+					startTime: null,
+					points: [],
 					get_time_proc: function() {
 						if (!obj.startTime) {
 							obj.startTime = new Date();
@@ -217,17 +224,17 @@
 						}
 						while (obj.moon_position>100) obj.moon_position -=100;
 						return obj;
-					},				
+					},
 					set_dom_labels:function(){
 						var sun_rise_proc = obj.sun_rise * 100 / obj.total_time;
-						var sun_set_proc = obj.sun_set * 100 / obj.total_time;						
+						var sun_set_proc = obj.sun_set * 100 / obj.total_time;
 						obj.elements.left_label.textContent = obj.make_time_from_seconds(Math.round(sun_rise_proc * 86400 / 100));
 						obj.elements.right_label.textContent = obj.make_time_from_seconds(Math.round(sun_set_proc * 86400 / 100));
 						/*
 							obj.elements.left_label.textContent = obj.make_time_from_seconds(obj.sun_rise);
 							obj.elements.right_label.textContent = obj.make_time_from_seconds(obj.sun_set);
 						*/
-						return obj;			
+						return obj;
 					},
 					set_dom_time: function() {
 						var display_time = obj.make_time_from_seconds(Math.round(obj.get_time_proc() * 86400 / 100));
@@ -238,9 +245,18 @@
 						obj.elements['bg'].className.baseVal = bg;
 						return this;
 					},
+					set_light: function(){
+						var r =(obj.sun_position === -1)?0:obj.sun_position;
+						r=(r>=50)?100-r:r;
+						if (r>0){
+							r*=2
+							r+=30
+						}
+						obj.elements.light.setAttribute('r', r);							
+					},
 					render: function(force) {
 						force = !!(force);
-						obj.set_sun().set_moon().set_dom_time();
+						obj.set_sun().set_moon().set_dom_time().set_light();
 						var sun_cursor = obj.sun_position > 0 ? Math.floor(obj.sun_position * (obj.points.length - 1) / 100) : -1;
 						var moon_cursor = obj.moon_position > 0 ? Math.floor(obj.moon_position * (obj.points.length - 1) / 100) : -1;
 						if (obj.sun_cursor !== sun_cursor) {
@@ -288,7 +304,7 @@
 						}
 						return obj;
 					},
-					make_time_from_seconds:function(seconds){								
+					make_time_from_seconds:function(seconds){
 						var ret_time = new Date(seconds * 1000).toISOString().substr(11, 8).split(':');
 						var int_time = ret_time.map((num) => parseInt(num));
 						if (!obj.use_seconds) ret_time = [ret_time[0],ret_time[1]];
@@ -301,31 +317,31 @@
 							}
 							if (int_time[0]===0){
 								ret_time[0]=12;
-							}							
-						}						
+							}
+						}
 						return 	ret_time.join(':');
-					},					
+					},
 					make_seconds_from_time:function(hh_ii_ss){
 						// supports strings of formats: HH,HH:MM,HH:MM:SS
 						//console.log(hh_ii_ss)
 						var s = 0;
 						var tmp = 0;
-						var my_time = hh_ii_ss.split(':').map((num) => parseInt(num));						
+						var my_time = hh_ii_ss.split(':').map((num) => parseInt(num));
 						if (my_time[0]){
-							tmp = my_time[0]  * 60 *60;							
+							tmp = my_time[0]  * 60 *60;
 							s+=tmp;
 							//console.log('seconds from hours: '+tmp);
 						}
 						if (my_time[1]){
 							tmp = parseInt(my_time[1])  * 60;
-							s+=tmp;							
+							s+=tmp;
 							//console.log('seconds from minutes: '+tmp);
 						}
 						if (my_time[2]){
 							tmp = parseInt(my_time[2]);
 							s+=tmp;
 							//console.log('seconds from seconds: '+tmp);
-						}												
+						}
 						return s;
 					},
 					init: function(start_time, total_time, sun_rise, sun_set) {
@@ -359,7 +375,7 @@
 					},
 					init_from_local_time:function(){
 						var dt = new Date();
-						var start_time = dt.getSeconds() + (60 * (dt.getMinutes() + (60 * dt.getHours())));						
+						var start_time = dt.getSeconds() + (60 * (dt.getMinutes() + (60 * dt.getHours())));
 						var total_time = obj.make_seconds_from_time("24");
 						var sun_rise = obj.make_seconds_from_time("6");
 						var sun_set = obj.make_seconds_from_time("20");
@@ -368,14 +384,14 @@
 					init_from_url:function(url){
 						var xhttp = new XMLHttpRequest();
 						xhttp.onreadystatechange = function() {
-							if (this.readyState == 4 && this.status == 200) {	
+							if (this.readyState == 4 && this.status == 200) {
 								var url_data = JSON.parse(xhttp.responseText)
 								var sun_rise = (url_data.sun_rise)?obj.make_seconds_from_time(url_data.sun_rise):null;
 								var sun_set = (url_data.sun_set)?obj.make_seconds_from_time(url_data.sun_set):null;
 								var start_time = (url_data.current_time)?obj.make_seconds_from_time(url_data.current_time):null;
 								var total_time = obj.make_seconds_from_time("24");
-								
-								obj.init(start_time, total_time, sun_rise, sun_set);																
+
+								obj.init(start_time, total_time, sun_rise, sun_set);
 							}
 							else{
 								//obj.init_from_local_time();//posible fall back
@@ -388,6 +404,6 @@
 				obj.init();
 				obj.init_from_url('my_time.json');
 				return obj;
-			}));
+			})); 	
             ]]></script>    
 		</svg>
