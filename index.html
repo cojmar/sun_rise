@@ -125,7 +125,7 @@
 
 			<g id="container" class="day">
 				<rect id="background" width="100%" height="100%"></rect>
-				<circle id="light" cx="0" cy="0" r="100" fill="url(#sungradient)"></circle>
+				<circle id="light" cx="0" cy="0" r="0" fill="url(#sungradient)"></circle>
 				<g id="gfx" transform="translate(0 80)">
 					<line class="st2" x1="25" x2="575" y1="300" y2="300"></line>
 					<path id="path" class="st2" transform="translate(0 5)" d="M505.74,294.59A220.56,220.56,0,0,0,100,282q-2.76,6-5.15,12.1"></path>
@@ -179,6 +179,7 @@
 						bg: document.getElementById('container'),
 						left_label:document.getElementById('left_label'),
 						right_label:document.getElementById('right_label'),
+						light:document.getElementById('light'),
 
 					},
 					use_pm:true,//true - shows times in AM/PM format
@@ -273,9 +274,18 @@
 						obj.elements['bg'].className.baseVal = bg;
 						return this;
 					},
+					set_light: function(){
+						var r =(obj.sun_position === -1)?0:obj.sun_position;
+						r=(r>=50)?100-r:r;
+						if (r>0){
+							r*=2
+							r+=30
+						}
+						obj.elements.light.setAttribute('r', r);							
+					},
 					render: function(force) {
 						force = !!(force);
-						obj.set_sun().set_moon().set_dom_time();
+						obj.set_sun().set_moon().set_dom_time().set_light();
 						var sun_cursor = obj.sun_position > 0 ? Math.floor(obj.sun_position * (obj.points.length - 1) / 100) : -1;
 						var moon_cursor = obj.moon_position > 0 ? Math.floor(obj.moon_position * (obj.points.length - 1) / 100) : -1;
 						if (obj.sun_cursor !== sun_cursor) {
