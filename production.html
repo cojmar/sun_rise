@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <object id="my_svg" data="svg.svg" type="image/svg+xml"></object>
+    <script>
+        document.getElementById("my_svg").addEventListener("load", function() {
+            console.log('load done.')
+        });        
+    </script>
+</body>
+</html>
