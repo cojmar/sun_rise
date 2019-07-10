@@ -257,12 +257,17 @@
 					set_dom_labels:function(){
 						var sun_rise_proc = obj.sun_rise * 100 / obj.total_time;
 						var sun_set_proc = obj.sun_set * 100 / obj.total_time;
-						obj.elements.left_label.textContent = obj.make_time_from_seconds(Math.round(sun_rise_proc * 86400 / 100));
-						obj.elements.right_label.textContent = obj.make_time_from_seconds(Math.round(sun_set_proc * 86400 / 100));
-						/*
-							obj.elements.left_label.textContent = obj.make_time_from_seconds(obj.sun_rise);
-							obj.elements.right_label.textContent = obj.make_time_from_seconds(obj.sun_set);
-						*/
+						var sun_rise_label = obj.make_time_from_seconds(Math.round(sun_rise_proc * 86400 / 100));
+						var sun_set_label = obj.make_time_from_seconds(Math.round(sun_set_proc * 86400 / 100));
+
+						if (obj.sun_position > 0){
+							obj.elements.left_label.textContent = sun_rise_label;
+							obj.elements.right_label.textContent = sun_set_label;
+						}else{
+							obj.elements.left_label.textContent = sun_set_label;
+							obj.elements.right_label.textContent = sun_rise_label;
+						}
+						
 						return obj;
 					},
 					set_dom_time: function() {
@@ -270,9 +275,10 @@
 						obj.elements.dom_time.textContent = display_time;
 						return obj;
 					},
-					set_background: function(bg) {
+					set_background: function() {
+						var bg=(obj.sun_position >= 0)?"day":"night";
 						obj.elements['bg'].className.baseVal = bg;
-						return this;
+						return obj;
 					},
 					set_light: function(){
 						var r =(obj.sun_position === -1)?0:obj.sun_position;
@@ -281,56 +287,45 @@
 							r*=2
 							r+=30
 						}
-						obj.elements.light.setAttribute('r', r);							
+						obj.elements.light.setAttribute('r', r);	
+						return obj;						
+					},
+					move_cursor:function(old_cursor,new_cursor,el,force){
+						force = !!(force);
+						if (old_cursor !== new_cursor) {
+							if (old_cursor > -1 && Math.abs(old_cursor - new_cursor) > 4) {
+								force = true;
+							}
+							if (!force) {
+								old_cursor += 1;
+
+								if (old_cursor >= obj.points.length) {
+									old_cursor = 0;
+								}
+							} else {
+								old_cursor = new_cursor
+							}
+							if (new_cursor >= 0) {								
+								obj.move_el(el, obj.points[old_cursor]);
+								obj.move_el('mask', obj.points[old_cursor]);
+							} else {								
+								obj.move_el(el, {x: -1000, y: -1000});
+							}
+						}
+						return obj;
 					},
 					render: function(force) {
 						force = !!(force);
-						obj.set_sun().set_moon().set_dom_time().set_light();
+						obj.set_sun()
+						.set_moon()
+						.set_dom_time()
+						.set_light()
+						.set_dom_labels()
+						.set_background();
 						var sun_cursor = obj.sun_position > 0 ? Math.floor(obj.sun_position * (obj.points.length - 1) / 100) : -1;
 						var moon_cursor = obj.moon_position > 0 ? Math.floor(obj.moon_position * (obj.points.length - 1) / 100) : -1;
-						if (obj.sun_cursor !== sun_cursor) {
-							if (obj.sun_cursor > -1 && Math.abs(obj.sun_cursor - sun_cursor) > 4) {
-								force = true;
-							}
-							if (!force) {
-								obj.sun_cursor += 1;
-
-								if (obj.sun_cursor >= obj.points.length) {
-									obj.sun_cursor = 0;
-								}
-							} else {
-								obj.sun_cursor = sun_cursor
-							}
-							if (obj.sun_cursor >= 0) {
-								obj.set_background('day');
-								obj.move_el('sun', obj.points[obj.sun_cursor]);
-								obj.move_el('mask', obj.points[obj.sun_cursor]);
-							} else {
-								obj.move_el('sun', {x: -1000, y: -1000});
-							}
-						}
-
-						if (obj.moon_cursor !== moon_cursor) {
-							if (obj.moon_cursor > -1 && Math.abs(obj.moon_cursor - moon_cursor) > 4) {
-								force = true;
-							}
-							if (!force) {
-								obj.moon_cursor += 1;
-
-								if (obj.moon_cursor >= obj.points.length) {
-									obj.moon_cursor = 0;
-								}
-							} else {
-								obj.moon_cursor = moon_cursor
-							}
-							if (obj.moon_cursor >= 0) {
-								obj.set_background('night');
-								obj.move_el('moon', obj.points[obj.moon_cursor]);
-								obj.move_el('mask', obj.points[obj.moon_cursor]);
-							} else {
-								obj.move_el('moon', {x: -1000, y: -1000});
-							}
-						}
+						obj.move_cursor(obj.sun_cursor,sun_cursor,'sun',force)
+						.move_cursor(obj.moon_cursor,moon_cursor,'moon',force);
 						return obj;
 					},
 					make_time_from_seconds:function(seconds){
