@@ -21,6 +21,7 @@
 		&nbsp;&nbsp;Total Time (in seconds) <input type="text" id="total_time" style="width:50px;"/>
 		&nbsp;&nbsp;Sun rise (second) <input type="text" id="sun_rise" style="width:50px;"/>
 		&nbsp;&nbsp;Sun set (second) <input type="text" id="sun_set" style="width:50px;"/>
+		&nbsp;&nbsp;<input type="checkbox" id="use_pm"/>Use PM/AM 
 		<button onclick="sand_box_time()">Simulate</button><button onclick="live_time()">Show live</button><br>
 		&nbsp;&nbsp;External url <input type="text" value ="data.json" id="external_url" style="width:150px;"/>
 		<button onclick="url_time()">Load from url</button><br>
@@ -182,7 +183,7 @@
 						light:document.getElementById('light'),
 
 					},
-					use_pm:true,//true - shows times in AM/PM format
+					use_pm:false,//true - shows times in AM/PM format
 					use_seconds:false,//true - show seconds times
 					point_density: 0.3,// Distance between 2 points on motion path
 					start_time: 0, 	// Start time (second where to stat current time)
@@ -342,8 +343,10 @@
 							if (int_time[0]===0){
 								ret_time[0]=12;
 							}
-						}
-						return 	ret_time.join(':');
+						}else{
+							ret_time[0] = '   '+ret_time[0];
+						}						
+						return ret_time.join(':');
 					},
 					make_seconds_from_time:function(hh_ii_ss){
 						// supports strings of formats: HH,HH:MM,HH:MM:SS
@@ -368,7 +371,7 @@
 						}
 						return s;
 					},
-					init: function(start_time, total_time, sun_rise, sun_set) {
+					init: function(start_time, total_time, sun_rise, sun_set,use_pm) {
 						if (obj.timer) clearInterval(obj.timer);
 						if (start_time || start_time === 0 ) {
 							if (obj.startTime) {
@@ -389,6 +392,10 @@
 						} else if (!obj.sun_set) {
 							obj.sun_set = obj.total_time / 2;
 						}
+
+						
+						obj.use_pm =!!use_pm;
+						
 						obj.get_time_proc();
 						obj.init_points().render(1);
 						obj.set_dom_labels();
@@ -414,8 +421,9 @@
 								var sun_set = (url_data.sun_set)?obj.make_seconds_from_time(url_data.sun_set):null;
 								var start_time = (url_data.current_time)?obj.make_seconds_from_time(url_data.current_time):null;
 								var total_time = obj.make_seconds_from_time("24");
-
-								obj.init(start_time, total_time, sun_rise, sun_set);
+								var use_pm = !!url_data.use_pm;
+								console.log(use_pm)
+								obj.init(start_time, total_time, sun_rise, sun_set,use_pm);
 							}
 							else{
 								//obj.init_from_local_time();//posible fall back
@@ -439,7 +447,8 @@
 				var total_time = document.getElementById('total_time').value;
 				var sun_rise = document.getElementById('sun_rise').value;
 				var sun_set = document.getElementById('sun_set').value;
-				svg_controller.init(start_time, total_time, sun_rise, sun_set)
+				var use_pm = document.getElementById("use_pm").checked;
+				svg_controller.init(start_time, total_time, sun_rise, sun_set,use_pm)
 			}
 
 			function url_time(){
