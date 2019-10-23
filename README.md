@@ -1,4 +1,8 @@
-# Sun Rise 2.0
-### Version 2.0 - index.html
-### version 1.0 - v1.html,svg_v1.svg
+#### Info
+##### customizable sun/moon movment animation
+##### svg files are compatible and editable with nsvg https://cojmar.github.io/nsvg
+#####
+#### links
+##### Version 2.0 - https://cojmar.github.io/sun_rise/ https://cojmar.github.io/sun_rise/svg.svg
+##### version 1.0 - https://cojmar.github.io/sun_rise/v1.html https://cojmar.github.io/sun_rise/svg_v1.svg
 
